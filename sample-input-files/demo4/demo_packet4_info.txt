@@ -1,0 +1,28 @@
+== DEMO4 ==
+
+Protocol info
+Name: DEMO4
+Description: DEMO4 Parent Protocol
+Header length: last field
+Payload delimiter: 0d0a
+
+Field delimiter: 3a
+
+Field	Type		Abbr	Name
+0	uint16		f0	Port
+  valstr:  [194]="IRC", [6679]="IRC DEMO"
+  bitmask: 0xFFFF00
+1	string		f1	Server
+->	Payload part (IRC channels)
+
+Dissector table (parent): tcp.port
+Dissector ID (port): 9876
+Dissector table (new): demo4.port
+Subdissector ID
+	Field: 0
+
+-Dissector file must be placed in .wireshark folder,
+ not in the plugins folder.
+-Line dofile("...") must be added to init.lua
+-Show the dissection result before creating the
+ dissector for the subprotocol

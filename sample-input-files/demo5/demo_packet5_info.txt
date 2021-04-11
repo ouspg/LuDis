@@ -1,0 +1,19 @@
+== DEMO5 ==
+
+Protocol info
+Name: DEMO5
+Description: DEMO5 Subprotocol
+Header delimiter: 0d0a
+Payload length: the rest
+
+Field delimiter: 2c
+
+Field	Type		Abbr	Name
+0	string		ch1	Channel 1
+1	string		ch2	Channel 2
+2	string		ch3	Channel 3
+3	string		ch4	Channel 4
+->	No bytes left for payload anymore
+
+Dissector table (parent): demo4.port
+Dissector ID (port): 6679

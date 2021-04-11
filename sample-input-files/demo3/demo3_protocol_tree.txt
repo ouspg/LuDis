@@ -1,0 +1,8 @@
+DEMO3 (My Test Protocol)
+    f0: .\r\n
+    f1: PUT text/html /index.html MTP/1.0\r\n
+        sf1-0: PUT
+        sf1-1: text/html
+        sf1-2: /index.html
+        sf1-3: MTP/1.0
+    f2: www.ludis.com\r\n

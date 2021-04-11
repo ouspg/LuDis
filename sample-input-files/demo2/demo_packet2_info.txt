@@ -1,0 +1,30 @@
+== DEMO2 ==
+
+Protocol info
+Name: DEMO2
+Description: DEMO2 Test Protocol
+Header length given: 15
+Payload length from header field number: 1
+
+Bytes	Type		Abbr	Name
+0	uint8		f0	Message ID
+1-2	uint16		f1	Payload length
+3-8	bytes		f2	Source info
+ 3-4	uint16		sf2-0	Source port
+	-> valuestring: [22]="SSH", [443]="HTTPS"
+	-What if the given valstr is invalid?
+ 5-8	ipv4		sf2-1	Source IP
+9-14	bytes		f3	Destination info
+ 9-10	uint16		sf3-0	Destination port
+	-> valuestring: [22]="SSH", [443]="HTTPS"
+ 11-14	ipv4		sf3-1	Destination IP
+-What if the user tries to define fields over the
+ given header length?
+
+15->	Payload part
+
+Dissector table (parent): udp.port
+ -How the table name is checked from Wireshark?
+Dissector ID (port): 55555
+ -What happens if the port number is invalid?
+ -What if only either one of them is given?

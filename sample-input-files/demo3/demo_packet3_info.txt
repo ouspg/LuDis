@@ -1,0 +1,28 @@
+== DEMO3 ==
+
+Protocol info
+Name: DEMO3
+Description: My Test Protocol
+Header delimiter: 0d0d
+Payload length: all the remaining bytes
+
+Field delimiter: 0d0a
+Subfield delimiter: 20
+
+-Field/subfield coloring
+-Field/subfield choosing buttons
+
+Field	Type		Abbr	Name
+0	uint8		f0	Type
+  valstr:  [0]="Response", [1]="Request"
+  bitmask: 0xFF0000
+1	string		f1	Message info
+  0	string		sf1-0	Method
+  1	string		sf1-1	Content
+  2	string		sf1-2	URI
+  3	string		sf1-3	Protocol version
+2	string		f2	Host
+->	Payload part
+
+Dissector table (parent): udp.port
+Dissector ID (port): 12345

@@ -1,0 +1,36 @@
+== DEMO1 ==
+
+Before opening a sample packet
+==============================
+- Different info popups by pressing buttons
+- Quit button -> asks for confirmation
+- Help button -> show how the search works
+
+Open a simple sample packet
+===========================
+- Open files in different formats
+- HEX, BIN, ASCII buttons
+- Define only necessary protocol information
+- Define a field or two
+- Defined bytes marked with red
+- Saving the protocol tree
+- Deleting a field
+- Deleting the whole protocol tree
+--------------------------------------------
+Protocol info
+Name: DEMO1
+Description: Testing
+
+Words		Field abbr	Type
+They're taking	what		string
+the hobbits	who		string
+  the		article		string
+  hobbits	noun		string
+Isengard	where		string
+
+-Create the fields in different order
+-Save the protocol tree
+-Choosing a field to be deleted
+-Delete a subfield
+-Delete a field with subfields
+-Delete the whole protocol tree
