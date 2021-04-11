@@ -1,0 +1,459 @@
+====================================================
+         LUA DISSECTOR GENERATOR MANUAL
+              Jarmo Luomala (2013)
+====================================================
+
+=============
+ Main window
+=============
+
+== Frames ==
+
+¤ Sample packet frame - The upper frame is used to 
+  display the sample packet read from the input 
+  file. The sample packet data is divided into 
+  pieces of full bytes.
+
+¤ Protocol tree frame - The lower frame is used to 
+  display the current protocol field tree as it is 
+  being constructed.
+
+== Menu buttons ==
+
+¤ Open - Opens a file dialog for the user to select
+  an input file, which contains the sample packet of
+  the target protocol.
+
+¤ Save - Gives the user the possibility to save the
+  current protocol tree to a text file. The button
+  is disabled when the protocol tree frame is empty.
+
+¤ Help - Shows the usage instructions of the tool.
+
+¤ Quit - Exits the program, but presents first a 
+  confirmation popup to the user.
+
+== Format buttons ==
+
+The presentation of the sample packet can be 
+switched between three different formats:
+
+¤ HEX - Shows the sample packet in hexadecimals.
+
+¤ BIN - Shows the sample packet in binary.
+
+¤ ASCII - Shows the sample packet in ASCII. Non-
+  printable control characters are replaced with
+  dots in the packet frame.
+
+== Protocol information buttons ==
+
+¤ Define protocol - Opens a new window on top of the
+  main window for defining the protocol information.
+
+¤ Clear protocol tree - Deletes the whole protocol
+  field tree including all field definitions.
+
+== Field information buttons ==
+
+The two radio buttons are used for choosing the way
+how the fields and subfields are going to be 
+delimited in the sample packet.
+
+¤ Use fixed fields - By choosing this option the 
+  user has to delimit the fields and subfields with 
+  mouse. The limits of a field are defined by 
+  highlighting the relevant bytes in the sample 
+  packet. The word "fixed" refers to the fact that 
+  the defined fields have to have the same size and
+  position in each packet of the protocol, in other
+  words, the sizes of the fields are fixed. This
+  option also disables the delimiter related 
+  buttons.
+
+¤ Use delimiters - By choosing this option the user
+  has to specify certain delimiters for fields and 
+  subfields. The tool uses these delimiters to 
+  automatically determine the ends of the fields.
+  This way the defined fields can be of varying size
+  in separate packets. This option also enables the
+  delimiter related buttons.
+
+¤ Define delimiters - Opens a new window on top of
+  the main window for defining the delimiters for 
+  protocol fields and subfields.
+
+¤ <- - Selects and highlights with green the 
+  previous field in the sample packet.
+
+¤ < - Selects and highlights with yellow the 
+  previous subfield inside the selected field.
+
+¤ > - Selects and highlights with yellow the next 
+  subfield inside the selected field.
+
+¤ -> - Selects and highlights with green the next 
+  field in the sample packet.
+
+¤ Clear delimiters - Clears the defined field and 
+  subfield delimiters. If there are any defined 
+  fields in the protocol tree, the user is asked for
+  confirmation since all the field and subfield 
+  definitions are deleted in the process.
+
+¤ Integer type field - Opens a new window on top of
+  the main window for defining the field/subfield 
+  selected (highlighted) in the sample packet. If
+  this button is pressed, the content of the field/
+  subfield will be interpreted as integer data 
+  during the packet dissection process in Wireshark.
+
+¤ Other type field - Opens a new window on top of 
+  the main window for defining the field/subfield 
+  selected (highlighted) in the sample packet. If
+  this button is pressed, the content of the field/
+  subfield will be regarded as other than integer 
+  type of data.
+
+¤ Clear defined field - Deletes the definition of 
+  the selected field/subfield and removes it from 
+  the protocol tree. A field can be selected for 
+  deletion by first highlighting it in the protocol
+  tree frame and then clicking the highlighted area.
+  This will result in highlighting the field with 
+  gray in both the sample packet frame and the 
+  protocol tree frame. Only one field should be 
+  selected for deletion at a time. These selections 
+  can be removed by clicking either of the frames 
+  with the secondary mouse button (right click). If
+  the field to be deleted has subfields, they will 
+  be deleted too. In this case the user will be 
+  warned and asked to confirm the action.
+
+¤ Create dissector - Opens a new window on top of 
+  the main window for defining the last necessary 
+  information before a Lua dissector can be 
+  generated for the target protocol.
+
+=============
+ Input files
+=============
+
+Input files must be in standard ASCII format. Each 
+packet must consist of full bytes of data. Three 
+types of content presentations are allowed:
+
+1. Binary presentation - The input file must begin 
+   with "BIN" (case-insensitive). Accepted 
+   characters for the packet data are 0 and 1, which
+   represent bits. All whitespaces are ignored.
+
+2. Hexadecimal presentation - The input file must 
+   begin with "HEX" (case-insensitive). Accepted 
+   characters for the packet data are digits 0-9 and
+   letters A-F (case-insensitive), which represent 
+   hexadecimal values. All whitespaces are ignored.
+
+3. ASCII presentation - The input file must begin 
+   with "ASC" (case-insensitive). Accepted 
+   characters for this data are all standard ASCII 
+   characters (case-sensitive), including control 
+   characters (entered by escape sequences).
+
+====================================
+ Define protocol information window
+====================================
+
+¤ Name - The user should write the name of the 
+  protocol in this text field. The name must consist
+  of standard ASCII characters, but if it contains 
+  only space characters it is rejected.
+
+¤ Description - The user should write a short 
+  description of the protocol in this text field. 
+  The same rule applies to the description as to the
+  name.
+
+== Header length ==
+
+The first three radio buttons are used to choose the
+way how the length of the packet header is 
+determined.
+
+¤ Use end of the last header field - The packet 
+  header ends to the last defined field.
+
+¤ Use given length - The length of the packet header
+  will be given manually by the user. The length 
+  should be given as the number of bytes and entered
+  into the input field. The input must be a) a valid
+  integer, b) greater than zero and c) less than the
+  number of bytes in the packet.
+
+¤ Use delimiter - The length of the packet header 
+  will be determined by a specified delimiter.
+  A delimiter is an array of characters the purpose
+  of which is to act as a boundary between data. The
+  delimiter must be given as full bytes of valid 
+  hexadecimal values, either beginning with "0x" or 
+  not (e.g., "0x0A0A" or "0A0A"). The case does not 
+  matter and spaces are ignored, for example, "1A2b"
+  equals "1 a 2B". Each hexadecimal value must be 
+  between 0x00 and 0x7F, but only the following 
+  control characters (in hex) are allowed to be used
+  in delimiters: 09, 0A, and 0D. In addition, the 
+  given delimiter must be found only once inside the
+  sample packet, except if the delimiter of the 
+  payload is the same, in which case it may appear 
+  twice.
+
+== Payload length ==
+
+The last three radio buttons are used to choose the 
+way how the length of the packet payload is 
+determined.
+
+¤ Use all bytes after the header - All remaining 
+  bytes after the packet header are considered as 
+  the payload.
+
+¤ Use delimiter - The length of the packet payload
+  will be determined by a specified delimiter. The 
+  same rules apply as in the case of the header 
+  delimiter. However, there is one additional rule:
+  the payload delimiter must be after the header.
+
+¤ Use header field - A specific header field defines
+  the length of the payload. This particular field 
+  is determined by giving its field number (or both
+  field and subfield number in case of a subfield)
+  in the packet. The field and subfield numbers 
+  start from 0. The content of the header field is 
+  interpreted as an integer which indicates the 
+  payload length.
+
+== Buttons ==
+
+¤ Apply (or <Enter>) - Apply the defined information
+  to the protocol.
+
+¤ Cancel (or <Esc>) - Cancel the definition process.
+
+==========================
+ Define delimiters window
+==========================
+
+Both delimiters must be given as full bytes of valid
+hexadecimal values, either beginning with "0x" or 
+not. The case does not matter and spaces are 
+ignored. Each hexadecimal value must be between 0x00
+and 0x7F, but only the following control characters 
+(in hex) are allowed to be used in delimiters:
+09, 0A, and 0D.
+
+¤ Field delimiter - The delimiter that separates all
+  header fields inside a packet. The field delimiter
+  is required.
+
+¤ Subfield delimiter - The delimiter that separates
+  subfields inside a field. The subfield delimiter
+  is optional.
+
+== Buttons ==
+
+¤ Apply (or <Enter>) - Apply the specified 
+  delimiters to the packet.
+
+¤ Cancel (or <Esc>) - Cancel the definition process.
+
+==================================
+ Define integer type field window
+==================================
+
+== Required information ==
+
+¤ Type - The type of the field. The type is selected
+  with the drop-down list.
+
+¤ Abbreviation - The abbreviated name of the field, 
+  which is used in Wireshark filters. The 
+  abbreviation a) must consist of standard ASCII 
+  characters, b) must not contain any dots (.) and 
+  c) must not consist only of spaces. Spaces are 
+  allowed, but they will be replaced with 
+  underscores (_).
+
+== Optional information ==
+
+¤ Name - The actual name of the field, which appears
+  in the dissection tree in Wireshark. The name must
+  consist of standard ASCII characters, but not only
+  spaces.
+
+¤ Description - The description of the field. The 
+  description must consist of standard ASCII 
+  characters, but not only spaces.
+
+¤ Base - The base of the representation: DEC 
+  (decimal), HEX (hexadecimal), OCT (octal). The 
+  default option is Unknown, which corresponds to 
+  base NONE in Wireshark.
+
+¤ Valuestring - A table containing the text that 
+  corresponds to the numerical key values. Elements
+  (key-value pair) of the table must be separated by
+  commas. Each element must be given in form:
+  [N] = "desc", where N denotes an integer value 
+  (key) of the field and desc the corresponding 
+  textual description of the value as a string. The 
+  string value can contain only alphabets, digits, 
+  and underscores. The key must be in square 
+  brackets, the string value in single or double 
+  quotes, and the key-value pair must be separated 
+  by an equal sign. This table is referred in 
+  Wireshark to interpret the field value and show 
+  the corresponding description of the value in the 
+  dissection tree.
+
+¤ Bitmask - The bitmask to be used for this field. 
+  The bitmask is used to indicate which bits of the 
+  selected bytes are actually included in the field.
+  The mask must begin with "0x" prefix and it must 
+  be given in hexadecimal values. The mask must also
+  be as long as the selected field in bytes. For 
+  example, if two bytes were selected/highlighted 
+  from the sample packet, the bitmask could be given
+  as "0x0FFF" indicating that the highest nibble is 
+  not a part of the field.
+
+== Buttons ==
+
+¤ Apply (or <Enter>) - Apply the specified 
+  delimiters to the packet.
+
+¤ Cancel (or <Esc>) - Cancel the definition process.
+
+================================
+ Define other type field window
+================================
+
+== Required information ==
+
+¤ Type - The type of the field. The type is selected
+  with the drop-down list.
+
+¤ Abbreviation - The abbreviated name of the field, 
+  which is used in Wireshark filters. The 
+  abbreviation a) must consist of standard ASCII 
+  characters, b) must not contain any dots (.) and 
+  c) must not consist only of spaces. Spaces are 
+  allowed, but they will be replaced with 
+  underscores (_).
+
+== Optional information ==
+
+¤ Name - The actual name of the field, which appears
+  in the dissection tree in Wireshark. The name must
+  consist of standard ASCII characters, but not only
+  spaces.
+
+¤ Base - The base of the time representation: LOCAL,
+  UTC (Coordinated Universal Time), DOY UTC. The 
+  default option is Unknown, which corresponds to 
+  base NONE in Wireshark. The base options are 
+  enabled only when absolute_time is selected as the
+  field type.
+
+¤ Description - The description of the field. The 
+  description must consist of standard ASCII 
+  characters, but not only spaces.
+
+==================================
+ Create protocol dissector window
+==================================
+
+== Required information ==
+
+¤ Save in.. - Opens a directory dialog for selecting
+  the directory in which the generated dissector 
+  will be saved. The path of the selected directory 
+  will be shown in the text field next to the 
+  button.
+
+== Optional information ==
+
+There are some connective rules between the 
+information fields. If the dissector ID is specified
+the parent dissector table must be given too, and 
+vice versa. If the new dissector table name is given
+the subdissector ID field must be specified too. And
+the subdissector ID related subfield number cannot
+be given without the corresponding field number.
+
+¤ Dissector table (parent) - The short name of a 
+  table of subdissectors of a particular protocol.
+  The dissector table refers to the "parent" 
+  dissector of the dissector at hand. In other
+  words, the newly defined protocol would be 
+  considered as a subprotocol of the protocol that
+  owns this dissector table. The table name must be 
+  given in lowercase letters and without any 
+  whitespaces.
+
+¤ Dissector ID (port) - The dissector identifier 
+  related to the dissector table, i.e., the port 
+  number the protocol uses. The ID must be a valid
+  integer and the same number must not be already
+  assigned to another dissector of the same 
+  dissector table (otherwise problems will occur in
+  Wireshark).
+
+¤ Dissector table (new) - The short name for a new 
+  table of subdissectors of the protocol at hand. 
+  The table name must be given in lowercase letters
+  and without any whitespaces. There must not exist
+  any dissector table with the same in Wireshark.
+
+Subdissector ID field
+
+The subdissector ID field is a field in a packet 
+which contains the ID/port number of a subdissector.
+With the help of this field the parent dissector
+knows to which subdissector it will pass the payload
+part of the packet.
+
+¤ Bytes (indices) - Indices of the bytes of the
+  subdissector ID field. The byte indices must be 
+  valid integers separated by a hyphen (unless the
+  field is only one byte long), e.g. 2-4. The bytes
+  must also be inside the header. This input field 
+  is enabled only when the option "Use fixed fields"
+  is selected.
+
+¤ Field - The field number of the subdissector ID
+  field. The number must be a valid nonnegative 
+  integer and smaller than the number of fields in 
+  the packet. In other words, the number must refer 
+  to an existing field, but not necessarily a 
+  defined one. The field must also be inside the
+  header. This input field is enabled only when the 
+  option "Use delimiters" is selected.
+
+¤ Subfield - The subfield number of the subdissector
+  ID field. The number must be a valid nonnegative 
+  integer and smaller than the number of subfields 
+  in the specified field. In other words, the number
+  must refer to an existing subfield, but not 
+  necessarily a defined one. The subfield must also
+  be inside the header. This input field is enabled 
+  only when the option "Use delimiters" is selected.
+
+== Buttons ==
+
+¤ Create (or <Enter>) - Applies the given 
+  information, creates a dissector in Lua according
+  to the protocol definitions, and saves it into the
+  specified directory.
+
+¤ Cancel (or <Esc>) - Cancels the process and closes
+  the popup window.
